@@ -192,7 +192,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "245724070873e4311464f8cb60b78cbda2a7fe1d"
+      resolved-ref: "41aa6d342e5b6e84306c53936b344a213d60f117"
       url: "https://github.com/antho-firuze/pusher_webman.git"
     source: git
     version: "0.1.0"
@@ -301,18 +301,18 @@ packages:
     dependency: transitive
     description:
       name: web_socket
-      sha256: "3c12d96c0c9a4eec095246debcea7b86c0324f22df69893d538fcc6f1b8cce83"
+      sha256: "34d64019aa8e36bf9842ac014bb5d2f5586ca73df5e4d9bf5c936975cae6982c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.6"
+    version: "1.0.1"
   web_socket_channel:
     dependency: transitive
     description:
       name: web_socket_channel
-      sha256: "0b8e2457400d8a859b7b2030786835a28a8e80836ef64402abef392ff4f1d0e5"
+      sha256: d645757fb0f4773d602444000a8131ff5d48c9e47adfe9772652dd1a4f2d45c8
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.0.3"
   web_socket_client:
     dependency: "direct main"
     description:

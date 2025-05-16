@@ -22,9 +22,11 @@ class _PusherClientState extends State<PusherClient> {
   final ScrollController _outputScroll = ScrollController();
   final ScrollController _messageScroll = ScrollController();
   late Pusher? _pusher;
+  late String userId;
 
   @override
   void initState() {
+    userId = Uuid().v4();
     super.initState();
   }
 
@@ -50,10 +52,13 @@ class _PusherClientState extends State<PusherClient> {
   }
 
   void connect() async {
+    final host = '';
     _pusher = Pusher(
-      url: 'ws://192.168.18.234:3131',
+      url: 'ws://49.0.1.125:3131',
+      // url: 'ws://192.168.18.234:3131',
       key: "ac824d4958a5fe8a9553b90c28560f91",
-      auth: PusherAuth('http://192.168.18.234/api/v1/pusher/auth'),
+      auth: PusherAuth('http://49.0.1.125/api/v1/pusher/auth'),
+      // auth: PusherAuth('http://192.168.18.234/api/v1/pusher/auth'),
       connectionState: (state) {
         output(state.name);
         setState(() {
@@ -74,27 +79,43 @@ class _PusherClientState extends State<PusherClient> {
     // final channel = pusher.subscribe('private-');
     // final channel = pusher.subscribe('public_channel');
     // =======================================================
+  }
 
+  void disconnect() {
+    _pusher?.disconnect();
+  }
+
+  void subscribePublic() {
     final channel = _pusher?.subscribe('public-channel');
     channel?.bind('public-message', (event) {
       message("$event");
     });
+  }
 
-    final userId = Uuid().v4();
-    final userName = _userCtrl.text;
+  void unsubscribePublic() {
+    _pusher?.unsubscribe('public-channel');
+  }
 
-    final privateChannel = _pusher?.subscribe('private-channel');
+  void subscribePrivate() {
+    final privateChannel = _pusher?.subscribe('private-user-$userId');
     privateChannel?.bind('client-message', (event) {
       final userFrom = event['from'];
       final msg = event['message'];
       message("[$userFrom] $msg");
     });
+  }
 
+  void unsubscribePrivate() {
+    _pusher?.unsubscribe('private-user-$userId');
+  }
+
+  void subscribePresence() {
+    final userName = _userCtrl.text;
     _pusher?.subscribe('presence-channel', userId: userId, userInfo: {"name": userName});
   }
 
-  void disconnect() {
-    _pusher?.disconnect();
+  void unsubscribePresence() {
+    _pusher?.unsubscribe('presence-channel');
   }
 
   void sendMessage(String msg) {
@@ -135,6 +156,19 @@ class _PusherClientState extends State<PusherClient> {
                       ),
                     ],
                   ),
+                ),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 5,
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(onPressed: () => subscribePublic(), child: Text('Subs-Public')),
+                    ElevatedButton(onPressed: () => unsubscribePublic(), child: Text('UnSubs-Public')),
+                    ElevatedButton(onPressed: () => subscribePrivate(), child: Text('Subs-Private')),
+                    ElevatedButton(onPressed: () => unsubscribePrivate(), child: Text('UnSubs-Private')),
+                    ElevatedButton(onPressed: () => subscribePresence(), child: Text('Subs-Presence')),
+                    ElevatedButton(onPressed: () => unsubscribePresence(), child: Text('UnSubs-Presence')),
+                  ],
                 ),
                 Text('Received Message :'),
                 Expanded(
